@@ -1,4 +1,3 @@
-import "./App.css";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -10,18 +9,26 @@ import MainLayout from "./layouts/MainLayout";
 import LoginPage from "./pages/LoginPage";
 import AuthLayout from "./layouts/AuthLayout";
 import ProductPage from "./pages/ProductPage";
+import Dashboard from "./pages/Dashboard";
+import ErrorPage from "./pages/ErrorPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import Transporter from "./pages/Transporter";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
         <Route index element={<HomePage />} />
         <Route path="/products" element={<ProductPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/transporters" element={<Transporter />} />
       </Route>
 
       <Route path="/" element={<AuthLayout />}>
         <Route path="/login" element={<LoginPage />} />
       </Route>
+
+      <Route path="*" element={<NotFoundPage />} />
     </>
   )
 );

@@ -1,7 +1,8 @@
+import { Burger } from "@mantine/core";
 import React from "react";
 
 function ProductPage() {
-  return <div>ProductPage</div>;
+  return <div>product details</div>;
 }
 
 export default ProductPage;

@@ -3,9 +3,11 @@ import { BasicAppShell } from "../components/shell";
 
 function MainLayout() {
   return (
-    <BasicAppShell>
-      <Outlet />
-    </BasicAppShell>
+    <>
+      <BasicAppShell>
+        <Outlet />
+      </BasicAppShell>
+    </>
   );
 }
 
