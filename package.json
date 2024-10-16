@@ -15,7 +15,9 @@
     "@mantine/hooks": "^7.13.2",
     "@mantine/notifications": "^7.13.2",
     "@tabler/icons-react": "^3.19.0",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "mantine-datatable": "^7.12.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0"
