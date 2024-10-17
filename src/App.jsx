@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Transporter from "./pages/Transporter";
+import Driver from "./pages/Driver";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
         <Route path="/products" element={<ProductPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transporters" element={<Transporter />} />
+        <Route path="/drivers" element={<Driver />}></Route>
       </Route>
 
       <Route path="/" element={<AuthLayout />}>
