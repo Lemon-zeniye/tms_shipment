@@ -14,12 +14,14 @@ import ErrorPage from "./pages/ErrorPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Transporter from "./pages/Transporter";
 import Vehicles from "./pages/vehicles";
+import { HeroSection } from "./components/hero-section";
+import AddShipment from "./components/add-shipment";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
-        <Route index element={<HomePage />} />
+        <Route path="/admin" element={<HomePage />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transporters" element={<Transporter />} />
@@ -27,7 +29,8 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path="/" element={<AuthLayout />}>
-        <Route path="/login" element={<LoginPage />} />
+        <Route index element={<HeroSection />} />
+        <Route path="/shipment" element={<AddShipment />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

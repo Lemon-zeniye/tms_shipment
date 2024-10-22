@@ -1,13 +1,15 @@
 import { Outlet } from "react-router-dom";
+import { HeaderMenu } from "../shared/components/navbar";
+import { Box, Container } from "@mantine/core";
 
 function AuthLayout() {
   return (
-    <div>
-      <main>
-        Auth layout
+    <main>
+      <HeaderMenu />
+      <div className="bg-[#F3F3F3]">
         <Outlet />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
 
