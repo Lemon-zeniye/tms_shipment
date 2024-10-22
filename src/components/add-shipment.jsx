@@ -1,9 +1,8 @@
 "use client";
-import { useRef, useState } from "react";
-import { Stepper, Button, Group, Box, Divider, Flex } from "@mantine/core";
+import { useState } from "react";
+import { Stepper, Box, Divider } from "@mantine/core";
 import Route from "./route";
 import CargoDescription from "./cargo-description";
-import ScheduleShipment from "./schedule-shipment";
 import AssignShipmentItems from "./assign-shipment";
 
 function AddShipment() {
@@ -16,10 +15,11 @@ function AddShipment() {
 
   return (
     <Box className="p-5 px-5 sm:px-20">
-      <Stepper active={active} onStepClick={setActive}>
+      <Stepper active={active} color="#6BBDFA" onStepClick={setActive}>
         <Stepper.Step
           label="Set Route"
           description="Define pickup and drop-off locations"
+          allowStepSelect={false}
         >
           <Divider my="lg" color="#fff" size="md" />
 
@@ -29,6 +29,7 @@ function AddShipment() {
         <Stepper.Step
           label="Describe Cargo"
           description="Provide shipment detail"
+          allowStepSelect={false}
         >
           <Divider my="lg" color="#fff" size="md" />
           <CargoDescription nextStep={nextStep} prevStep={prevStep} />
@@ -37,6 +38,7 @@ function AddShipment() {
         <Stepper.Step
           label="Final Step"
           description="Review shipment details and submit"
+          allowStepSelect={false}
         >
           <Divider my="lg" color="#fff" size="md" />
 

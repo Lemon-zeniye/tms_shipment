@@ -169,14 +169,14 @@ function Route({ nextStep, prevStep }) {
 
   return (
     <div
-      className="bg-white rounded-lg"
+      // className="bg-white rounded-lg"
       gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}
     >
       <Grid>
         <Grid.Col span={{ xs: 12, sm: 6 }}>
           <form>
             <Title>From</Title>
-            <Box className="shadow-lg rounded-md p-5 pb-10 border-t border-t-gray-100">
+            <Box className="shadow-lg rounded-md p-5 pb-12 border-t bg-white  border-t-gray-100">
               <Controller
                 name="pickup_location"
                 control={control}
@@ -324,7 +324,7 @@ function Route({ nextStep, prevStep }) {
         <Grid.Col span={{ xs: 12, sm: 6 }}>
           <form>
             <Title>To</Title>
-            <Box className="shadow-lg rounded-md p-5">
+            <Box className="shadow-lg rounded-md p-5 bg-white">
               <Checkbox
                 onChange={(e) => setMultipleDropOfloc(e.currentTarget.checked)}
                 label={
@@ -441,8 +441,12 @@ function Route({ nextStep, prevStep }) {
               )}
               {multipleDropOfloc && (
                 <Flex justify="flex-end">
-                  <Button type="button" onClick={addMultipleLocation}>
-                    Add To List
+                  <Button
+                    className="rounded-full px-10 bg-gradient-to-r from-sky-300 to-blue-500"
+                    type="button"
+                    onClick={addMultipleLocation}
+                  >
+                    Add More Location
                   </Button>
                 </Flex>
               )}
@@ -500,10 +504,15 @@ function Route({ nextStep, prevStep }) {
         </Grid.Col>
       </Grid>
       <Flex justify="center" gap={10} mt="xl">
-        <Button variant="default" onClick={prevStep}>
+        {/* <Button variant="default" onClick={prevStep}>
           Back
+        </Button> */}
+        <Button
+          className="rounded-full px-10 bg-gradient-to-r from-sky-300 to-blue-500"
+          onClick={() => nextStepCalled()}
+        >
+          Next
         </Button>
-        <Button onClick={() => nextStepCalled()}>Next</Button>
       </Flex>
     </div>
   );

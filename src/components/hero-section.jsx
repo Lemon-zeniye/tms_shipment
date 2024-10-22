@@ -59,11 +59,6 @@ export function HeroSection() {
               shipments, and more. Flexible for individual transporters and
               fleet operators.
             </List.Item>
-            {/* <List.Item>
-              <b>Automated Invoicing and Tracking</b> – Automatically generate
-              invoices and track shipment history without the need for real-time
-              tracking.
-            </List.Item> */}
             <List.Item>
               <b>Bid System for Transparent Pricing </b> – Transporters bid on
               shipments, ensuring competitive rates, and shippers choose the
@@ -75,7 +70,7 @@ export function HeroSection() {
             <Button
               radius="xl"
               size="md"
-              className={classes.control}
+              className="bg-gradient-to-r from-sky-300 to-blue-500 px-10 rounded-full"
               onClick={() => navigate("/shipment")}
             >
               New Shipment
@@ -105,7 +100,7 @@ export function HeroSection() {
       >
         <Flex className="gap-5 items-end">
           <TextInput
-            className="w-full"
+            className="w-full "
             label="Track Number"
             placeholder="Track Number"
           />

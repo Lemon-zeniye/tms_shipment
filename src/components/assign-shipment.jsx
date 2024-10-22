@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Button,
+  Divider,
   Flex,
   Grid,
   GridCol,
@@ -11,120 +12,24 @@ import {
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import React from "react";
+import { useSelector } from "react-redux";
+import {
+  selectDropOffLocations,
+  selectPickUpLocations,
+  selectShipmentItems,
+} from "../store/shipment";
 
 function AssignShipmentItems({ nextStep, prevStep }) {
-  const shipmentItems = [
-    {
-      id: "1",
-      itemDescription: "Item A",
-      packagingType: "Box",
-      quantity: 10,
-      weight: 2, // Weight per item
-      totalWeight: 20, // Calculated as quantity * weight
-      pickUpLocations: [
-        {
-          id: 1,
-          locationName: "Warehouse A",
-          address: "123 Industrial Park, City A",
-          contactPerson: "John Doe",
-          contactNumber: "123-456-7890",
-          pickupTime: "2024-10-21T09:00:00", // ISO date format for time
-          quantity: 5,
-        },
-        {
-          id: 2,
-          locationName: "Supplier B",
-          address: "456 Market Street, City B",
-          contactPerson: "Jane Smith",
-          contactNumber: "987-654-3210",
-          pickupTime: "2024-10-21T12:00:00",
-          quantity: 5,
-        },
-      ],
-      dropoffLocations: [
-        {
-          id: 1,
-          locationName: "Customer C",
-          address: "789 Retail Plaza, City C",
-          contactPerson: "Alice Johnson",
-          contactNumber: "321-654-0987",
-          dropoffTime: "2024-10-21T15:00:00",
-          quantity: 5,
-        },
-        {
-          id: 2,
-          locationName: "Store D",
-          address: "321 Commercial Blvd, City D",
-          contactPerson: "Bob Martin",
-          contactNumber: "654-321-7890",
-          dropoffTime: "2024-10-21T18:00:00",
-          quantity: 5,
-        },
-      ],
-    },
-    {
-      id: "2",
-      itemDescription: "Item B",
-      packagingType: "Pallet",
-      quantity: 5,
-      weight: 10, // Weight per item
-      totalWeight: 50, // Calculated as quantity * weight
-      pickUpLocations: [
-        {
-          id: 1,
-          locationName: "Warehouse A",
-          address: "123 Industrial Park, City A",
-          contactPerson: "John Doe",
-          contactNumber: "123-456-7890",
-          pickupTime: "2024-10-21T09:00:00", // ISO date format for time
-          quantity: 5,
-        },
-      ],
-      dropoffLocations: [
-        {
-          id: 1,
-          locationName: "Customer C",
-          address: "789 Retail Plaza, City C",
-          contactPerson: "Alice Johnson",
-          contactNumber: "321-654-0987",
-          dropoffTime: "2024-10-21T15:00:00",
-          quantity: 5,
-        },
-      ],
-    },
-    {
-      id: "3",
-      itemDescription: "Item C",
-      packagingType: "Crate",
-      quantity: 3,
-      weight: 15,
-      totalWeight: 45,
-      pickUpLocations: [
-        {
-          id: 1,
-          locationName: "Warehouse A",
-          address: "123 Industrial Park, City A",
-          contactPerson: "John Doe",
-          contactNumber: "123-456-7890",
-          pickupTime: "2024-10-21T09:00:00", // ISO date format for time
-          quantity: 3,
-        },
-      ],
-      dropoffLocations: [
-        {
-          id: 1,
-          locationName: "Customer C",
-          address: "789 Retail Plaza, City C",
-          contactPerson: "Alice Johnson",
-          contactNumber: "321-654-0987",
-          dropoffTime: "2024-10-21T15:00:00",
-          quantity: 3,
-        },
-      ],
-    },
-  ];
+  const shipmentItems = useSelector(selectShipmentItems);
+  const dropOffLocations = useSelector(selectDropOffLocations);
+  const pickupLocations = useSelector(selectPickUpLocations);
 
-  const pickupLocations = [];
+  console.log(
+    "33333333333333333",
+    shipmentItems,
+    dropOffLocations,
+    pickupLocations
+  );
 
   return (
     <div>
@@ -152,30 +57,55 @@ function AssignShipmentItems({ nextStep, prevStep }) {
             content: ({ record }) => (
               <Grid p="xs" gap={10} className="bg-gray-200">
                 <GridCol span={12}>
-                  <Text className="font-semibold underline">
-                    Pickup Locations
-                  </Text>
+                  <div>
+                    <DataTable
+                      withTableBorder
+                      borderRadius="md"
+                      columns={[
+                        {
+                          accessor: "pickup_location",
+                        },
+                        {
+                          accessor: "contact_person",
+                          render: (record) =>
+                            record.contact_person?.full_name || "N/A",
+                        },
+                        {
+                          accessor: "pickup_date",
+                          render: (record) =>
+                            new Date(record?.pickup_date)?.toLocaleDateString(),
+                        },
+                      ]}
+                      records={pickupLocations ?? []}
+                    />
+                  </div>
+                  <Divider my={10} color="white" size="md" />
                   <div>
                     <DataTable
                       withTableBorder
                       borderRadius="md"
                       // height={150}
                       columns={[
-                        // {
-                        //   accessor: "no",
-                        //   title: "No.",
-                        //   render: (records, index) => <>{index + 1}</>,
-                        // },
                         {
-                          accessor: "locationName",
+                          accessor: "dropoff_location",
                         },
-                        { accessor: "address" },
-                        { accessor: "contactPerson" },
+                        { accessor: "full_name" },
                         { accessor: "quantity" },
-                        // { accessor: "quantity" },
-                        // { accessor: "totalWeight" },
                       ]}
-                      records={record?.pickUpLocations ?? []}
+                      records={
+                        record?.dropOffLocations?.map((dropOffLocation) => {
+                          const locationDetails = dropOffLocations.find(
+                            (loc) => loc.id === dropOffLocation.id
+                          );
+
+                          return {
+                            dropoff_location: locationDetails?.dropoff_location,
+                            full_name: locationDetails?.reciver?.full_name,
+                            quantity: dropOffLocation.quantity,
+                          };
+                        }) ?? []
+                      }
+                      // departments.filter((department) => department.company.id === company.record.id)
                     />
                   </div>
                 </GridCol>
@@ -185,10 +115,16 @@ function AssignShipmentItems({ nextStep, prevStep }) {
         />
       </div>
       <Flex justify="center" gap={10} mt="xl">
-        <Button variant="default" onClick={prevStep}>
+        <Button
+          className="rounded-full px-10"
+          variant="default"
+          onClick={prevStep}
+        >
           Back
         </Button>
-        <Button>Next</Button>
+        <Button className="rounded-full px-10 bg-gradient-to-r from-sky-300 to-blue-500">
+          Submit
+        </Button>
       </Flex>
     </div>
   );

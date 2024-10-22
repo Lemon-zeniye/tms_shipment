@@ -6,7 +6,7 @@ function AuthLayout() {
   return (
     <main>
       <HeaderMenu />
-      <div className="bg-[#F3F3F3]">
+      <div className="bg-gradient-to-br from-[#fdfeff] to-[#c3cfe2] min-h-[91vh]">
         <Outlet />
       </div>
     </main>

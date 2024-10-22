@@ -31,6 +31,7 @@ import {
   IconTruck,
 } from "@tabler/icons-react";
 import classes from "./navbar.module.css";
+import { Link } from "react-router-dom";
 
 const mockdata = [
   {
@@ -102,10 +103,10 @@ export function HeaderMenu() {
           />
 
           <Group h="100%" gap={0} visibleFrom="sm">
-            <a href="/home" className={classes.link}>
+            <Link to="/" className={classes.link}>
               Home
-            </a>
-            <HoverCard
+            </Link>
+            {/* <HoverCard
               width={600}
               position="bottom"
               radius="md"
@@ -154,13 +155,13 @@ export function HeaderMenu() {
                   </Group>
                 </div>
               </HoverCard.Dropdown>
-            </HoverCard>
-            {/* <a href="#" className={classes.link}>
-              Learn
-            </a> */}
-            <a href="#" className={classes.link}>
+            </HoverCard> */}
+            <Link to="/shipment" className={classes.link}>
+              New Shipment
+            </Link>
+            <Link to="#" className={classes.link}>
               Contact Us
-            </a>
+            </Link>
           </Group>
 
           <Group visibleFrom="sm">

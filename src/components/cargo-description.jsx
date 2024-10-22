@@ -10,7 +10,6 @@ import {
   Select,
   Text,
   TextInput,
-  Title,
 } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
@@ -70,8 +69,8 @@ function CargoDescription({ nextStep, prevStep }) {
   const [locationSelected, setLocationSelected] = useState([]);
 
   const [selectedDropOffLocation, setSelectedDropOffLocation] = useState(null);
-  let maxItemQuantity = watch("quantity") ?? 0;
-  let maxTotalQuantity = watch("quantity") ?? 0;
+  const maxItemQuantity = watch("quantity") ?? 0;
+  const maxTotalQuantity = watch("quantity") ?? 0;
 
   const handleSelectChange = (selectedId) => {
     const selectedLocation = dropOffLocations.find(
@@ -121,6 +120,32 @@ function CargoDescription({ nextStep, prevStep }) {
   };
 
   const onSubmit = (data) => {
+    if (dropOffLocations?.length > 1 && locationSelected?.length === 0) {
+      notifications.show({
+        title: "Error",
+        message: "Please Select a drop of Location",
+        color: "red",
+      });
+      return;
+    }
+    if (dropOffLocations?.length > 1 && locationSelected?.length > 0) {
+      const totalQuantity = locationSelected.reduce(
+        (total, loc) => total + loc.quantity,
+        0
+      );
+
+      console.log("333333333", totalQuantity);
+      if (totalQuantity !== maxItemQuantity) {
+        notifications.show({
+          title: "Error",
+          message: `Please put a quantity of ${maxItemQuantity} items`,
+          color: "red",
+        });
+        return;
+      }
+    }
+    setLocationSelected([]);
+    setSelectedDropOffLocation(null);
     const newData = { ...data, dropOffLocations: locationSelected };
     dispatch(addShipmentItem(newData));
     resetFrom();
@@ -376,9 +401,15 @@ function CargoDescription({ nextStep, prevStep }) {
           )}
 
           <div className="w-full flex justify-end items-center gap-5 mt-6">
-            <Button variant="default">Clear</Button>
-            <Button type="button" onClick={addToList}>
-              Add To List
+            <Button className="rounded-full px-10 " variant="default">
+              Clear
+            </Button>
+            <Button
+              className="rounded-full px-10 bg-gradient-to-r from-sky-300 to-blue-500"
+              type="button"
+              onClick={addToList}
+            >
+              Add More Item
             </Button>
           </div>
         </form>
@@ -434,10 +465,19 @@ function CargoDescription({ nextStep, prevStep }) {
         </div>
       </div>
       <Flex justify="center" gap={10} mt="xl">
-        <Button variant="default" onClick={prevStep}>
+        <Button
+          className="rounded-full px-10"
+          variant="default"
+          onClick={prevStep}
+        >
           Back
         </Button>
-        <Button onClick={nextStepCalled}>Next</Button>
+        <Button
+          className="rounded-full px-10 bg-gradient-to-r from-sky-300 to-blue-500"
+          onClick={nextStepCalled}
+        >
+          Next
+        </Button>
       </Flex>
     </div>
   );
