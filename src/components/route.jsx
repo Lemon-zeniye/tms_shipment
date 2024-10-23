@@ -17,11 +17,12 @@ import React, {
   useState,
   forwardRef,
   useImperativeHandle,
+  useEffect,
 } from "react";
 import LocationPicker from "../shared/components/location-picker";
 import { DateInput, TimeInput } from "@mantine/dates";
 import { IconClock, IconEdit, IconTrash } from "@tabler/icons-react";
-import { z } from "zod";
+import { string, z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,9 +31,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addDropOffLocation,
   addPickUpLocation,
+  deleteDropOffLocation,
   selectDropOffLocations,
+  selectPickUpLocations,
+  updateDropOffLocation,
 } from "../store/shipment";
 import { DataTable } from "mantine-datatable";
+import { notifications } from "@mantine/notifications";
 
 function Route({ nextStep, prevStep }) {
   const refFrom = useRef(null);
@@ -45,6 +50,9 @@ function Route({ nextStep, prevStep }) {
 
   const dispatch = useDispatch();
   const dropOffLocations = useSelector(selectDropOffLocations);
+  const pickupLocations = useSelector(selectPickUpLocations);
+
+  const [onEdit, setOnEdit] = useState(false);
 
   const pickerControl = (ref) => {
     return (
@@ -60,7 +68,7 @@ function Route({ nextStep, prevStep }) {
 
   // For Pick Up Location
   const pickUpSchema = z.object({
-    id: z.string().default(uuidv4()),
+    id: string().optional(),
     multiple_pickup_location: z.boolean().default(false),
     pickup_location: z.string("Item category is required"),
     pickup_date: z.date("Packaging type is required"),
@@ -77,9 +85,9 @@ function Route({ nextStep, prevStep }) {
     // include_store: z.boolean().default(false).optional(),
     store: z
       .object({
-        store_number: z.string(),
-        store_keeper_name: z.string(),
-        phone_number: z.string(),
+        store_number: z.string().optional(),
+        store_keeper_name: z.string().optional(),
+        phone_number: z.string().optional(),
       })
       .optional(),
   });
@@ -99,18 +107,10 @@ function Route({ nextStep, prevStep }) {
     resolver: zodResolver(pickUpSchema),
   });
 
-  const onSubmitPickUp = (data) => {
-    dispatch(addPickUpLocation(data));
-  };
-
-  const onErrorPickUp = (errors) => {
-    console.log("33333", errors);
-  };
-
   // For Drop of Location
   const dropOffSchema = z.object({
-    id: z.string().default(uuidv4()),
-    multiple_pickup_location: z.boolean().default(false),
+    id: string().optional(),
+    multiple_dropoff_location: z.boolean().default(false),
     dropoff_location: z.string("Item category is required"),
     delivery_date: z.date("Packaging type is required"),
     reciver: z.object({
@@ -124,9 +124,9 @@ function Route({ nextStep, prevStep }) {
     // include_store: z.boolean().default(false).optional(),
     store: z
       .object({
-        store_number: z.string(),
-        store_keeper_name: z.string(),
-        phone_number: z.string(),
+        store_number: z.string().optional(),
+        store_keeper_name: z.string().optional(),
+        phone_number: z.string().optional(),
       })
       .optional(),
   });
@@ -145,18 +145,65 @@ function Route({ nextStep, prevStep }) {
     resolver: zodResolver(dropOffSchema),
   });
 
+  const onSubmitPickUp = (data) => {
+    const payload = {
+      ...data,
+      pickup_date: new Date(data.pickup_date).toLocaleDateString(),
+    };
+    dispatch(addPickUpLocation(payload));
+  };
+
+  const onErrorPickUp = (errors) => {
+    console.log("444444444444", errors);
+    notifications.show({
+      title: "Error",
+      message: "Please make sure all required field are  filled",
+      color: "red",
+    });
+  };
+
   const onSubmitDropOff = (data) => {
-    dispatch(addDropOffLocation(data));
+    const payload = {
+      ...data,
+      delivery_date: new Date(data.delivery_date).toLocaleDateString(),
+    };
+
+    if (payload.id) {
+      dispatch(updateDropOffLocation(payload));
+
+      reset2({
+        id: "",
+        dropoff_location: "",
+        delivery_date: null,
+        reciver: {
+          full_name: "",
+          phone_number: 0,
+          email: "",
+        },
+        store: {
+          store_number: "",
+          store_keeper_name: "",
+          phone_number: "",
+        },
+      });
+      return;
+    }
+    dispatch(addDropOffLocation(payload));
     reset2();
   };
 
   const onErrorDropOff = (errors) => {
-    console.log("33333", errors);
+    console.log("33333333333333", errors);
+    // notifications.show({
+    //   title: "Error",
+    //   message: "Please make sure all required field are  filled",
+    //   color: "red",
+    // });
   };
 
   const nextStepCalled = () => {
-    handleSubmit(onSubmitPickUp)();
-    handleSubmit2(onSubmitDropOff)();
+    handleSubmit(onSubmitPickUp, onErrorPickUp)();
+    handleSubmit2(onSubmitDropOff, onErrorDropOff)();
 
     if ((isValid && isValid2) || (isValid && dropOffLocations?.length > 0)) {
       nextStep();
@@ -164,7 +211,72 @@ function Route({ nextStep, prevStep }) {
   };
 
   const addMultipleLocation = () => {
-    handleSubmit2(onSubmitDropOff)();
+    handleSubmit2(onSubmitDropOff, onErrorDropOff)();
+  };
+
+  const populateDropOffLoc = (dropoffloc) => {
+    if (dropoffloc) {
+      reset2({
+        id: dropoffloc.id,
+        multiple_dropoff_location: dropoffloc.multiple_dropoff_location,
+        dropoff_location: dropoffloc.dropoff_location,
+        delivery_date: new Date(dropoffloc.delivery_date), // Convert to Date
+        from: dropoffloc.from,
+        to: dropoffloc.to,
+        reciver: {
+          full_name: dropoffloc.reciver.full_name,
+          phone_number: dropoffloc.reciver.phone_number,
+          email: dropoffloc.reciver.email,
+        },
+        store: dropoffloc.store,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (pickupLocations && pickupLocations.length > 0) {
+      const firstPickup = pickupLocations[0];
+
+      // Reset form with new values
+      reset({
+        id: firstPickup.id,
+        multiple_pickup_location: firstPickup.multiple_pickup_location,
+        pickup_location: firstPickup.pickup_location,
+        pickup_date: new Date(firstPickup.pickup_date), // Convert to Date
+        from: firstPickup.from,
+        to: firstPickup.to,
+        contact_person: {
+          full_name: firstPickup.contact_person.full_name,
+          phone_number: firstPickup.contact_person.phone_number,
+          email: firstPickup.contact_person.email,
+        },
+        store: {
+          store_keeper_name: firstPickup?.store?.store_keeper_name ?? "",
+          store_number: firstPickup?.store?.store_number ?? "",
+          phone_number: firstPickup?.store?.phone_number,
+        },
+      });
+    }
+  }, [pickupLocations, reset]);
+
+  useEffect(() => {
+    if (dropOffLocations && dropOffLocations.length > 0) {
+      // if (dropOffLocations.length === 1) {
+      //   const firstDropOff = dropOffLocations[0];
+      //   populateDropOffLoc(firstDropOff);
+      // } else {
+      setMultipleDropOfloc(true);
+      // }
+    }
+  }, [dropOffLocations, reset2]);
+
+  const onDeleteDropOff = (data) => {
+    dispatch(deleteDropOffLocation(data));
+  };
+
+  const onEditDropOff = (data) => {
+    setOnEdit(true);
+    populateDropOffLoc(data);
   };
 
   return (
@@ -326,7 +438,13 @@ function Route({ nextStep, prevStep }) {
             <Title className="font-custom">To</Title>
             <Box className="shadow-lg rounded-md p-5 bg-white">
               <Checkbox
-                onChange={(e) => setMultipleDropOfloc(e.currentTarget.checked)}
+                onChange={(e) => {
+                  setMultipleDropOfloc(e.currentTarget.checked),
+                    setValue2(
+                      "multiple_dropoff_location",
+                      e.currentTarget.checked
+                    );
+                }}
                 label={
                   <Text className="font-semibold">
                     Has Multiple Drop off Location
@@ -446,7 +564,7 @@ function Route({ nextStep, prevStep }) {
                     type="button"
                     onClick={addMultipleLocation}
                   >
-                    Add More Location
+                    {onEdit ? "Edit Location" : "Add More Location"}
                   </Button>
                 </Flex>
               )}
@@ -485,10 +603,20 @@ function Route({ nextStep, prevStep }) {
                         width: "0%",
                         render: (records) => (
                           <Group gap={4} justify="right" wrap="nowrap">
-                            <ActionIcon size="sm" variant="subtle" color="blue">
+                            <ActionIcon
+                              onClick={() => onEditDropOff(records)}
+                              size="sm"
+                              variant="subtle"
+                              color="blue"
+                            >
                               <IconEdit size={16} />
                             </ActionIcon>
-                            <ActionIcon size="sm" variant="subtle" color="red">
+                            <ActionIcon
+                              onClick={() => onDeleteDropOff(records)}
+                              size="sm"
+                              variant="subtle"
+                              color="red"
+                            >
                               <IconTrash size={16} />
                             </ActionIcon>
                           </Group>
@@ -504,9 +632,6 @@ function Route({ nextStep, prevStep }) {
         </Grid.Col>
       </Grid>
       <Flex justify="center" gap={10} mt="xl">
-        {/* <Button variant="default" onClick={prevStep}>
-          Back
-        </Button> */}
         <Button
           className="rounded-full px-10 bg-gradient-to-r from-sky-300 to-blue-500"
           onClick={() => nextStepCalled()}

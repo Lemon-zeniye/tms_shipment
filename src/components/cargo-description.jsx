@@ -68,62 +68,13 @@ function CargoDescription({ nextStep, prevStep }) {
 
   const [locationSelected, setLocationSelected] = useState([]);
 
-  const [selectedDropOffLocation, setSelectedDropOffLocation] = useState(null);
   const maxItemQuantity = watch("quantity") ?? 0;
-  const maxTotalQuantity = watch("quantity") ?? 0;
-
-  const handleSelectChange = (selectedId) => {
-    const selectedLocation = dropOffLocations.find(
-      (loc) => loc.id === selectedId
-    );
-
-    if (locationSelected.find((loc) => loc.id === selectedId)) return;
-
-    if (selectedLocation) {
-      setLocationSelected((prevState) => [
-        ...prevState,
-        { id: selectedLocation.id, quantity: 0 },
-      ]);
-      setSelectedDropOffLocation(selectedLocation.id);
-    }
-  };
-
-  const handleQuantityChange = (value) => {
-    if (selectedDropOffLocation) {
-      const currentTotalQuantity = locationSelected.reduce(
-        (sum, loc) => sum + loc.quantity,
-        0
-      );
-
-      const newTotalQuantity =
-        currentTotalQuantity -
-        (locationSelected.find((loc) => loc.id === selectedDropOffLocation)
-          ?.quantity || 0) +
-        value;
-
-      if (newTotalQuantity <= maxTotalQuantity) {
-        setLocationSelected((prevState) =>
-          prevState.map((loc) =>
-            loc.id === selectedDropOffLocation
-              ? { ...loc, quantity: Math.min(value, maxItemQuantity) }
-              : loc
-          )
-        );
-      } else {
-        notifications.show({
-          title: "Error",
-          message: `Total quantity cannot exceed ${maxTotalQuantity}`,
-          color: "red",
-        });
-      }
-    }
-  };
 
   const onSubmit = (data) => {
     if (dropOffLocations?.length > 1 && locationSelected?.length === 0) {
       notifications.show({
         title: "Error",
-        message: "Please Select a drop of Location",
+        message: "Please Add a drop of Location",
         color: "red",
       });
       return;
@@ -134,7 +85,6 @@ function CargoDescription({ nextStep, prevStep }) {
         0
       );
 
-      console.log("333333333", totalQuantity);
       if (totalQuantity !== maxItemQuantity) {
         notifications.show({
           title: "Error",
@@ -145,7 +95,6 @@ function CargoDescription({ nextStep, prevStep }) {
       }
     }
     setLocationSelected([]);
-    setSelectedDropOffLocation(null);
     const newData = { ...data, dropOffLocations: locationSelected };
     dispatch(addShipmentItem(newData));
     resetFrom();
@@ -178,6 +127,77 @@ function CargoDescription({ nextStep, prevStep }) {
     setValue("dimension.width", 0);
     setValue("weight", 0);
     setValue("totalWeigth", 0);
+  };
+
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedQuantity, setSelectedQuantity] = useState("");
+  const [addLocationSubmited, setAddLocationSubmited] = useState(false);
+
+  const addLocationToItem = () => {
+    setAddLocationSubmited(true);
+
+    if (selectedQuantity > maxItemQuantity) {
+      notifications.show({
+        title: "Error",
+        message: "Selected quantity exceeds the maximum available quantity.",
+        color: "red",
+      });
+      return;
+    }
+
+    if (selectedLocation && selectedQuantity) {
+      const existingLocationIndex = locationSelected.findIndex(
+        (loc) => loc.location_id === selectedLocation
+      );
+
+      const totalSelectedQuantityWithoutCurrent = locationSelected.reduce(
+        (sum, loc, index) =>
+          index === existingLocationIndex ? sum : sum + loc.quantity,
+        0
+      );
+
+      if (existingLocationIndex !== -1) {
+        if (
+          totalSelectedQuantityWithoutCurrent + selectedQuantity >
+          maxItemQuantity
+        ) {
+          notifications.show({
+            title: "Error",
+            message: "Total quantity exceeds the maximum available quantity.",
+            color: "red",
+          });
+          return;
+        }
+
+        const updatedLocations = [...locationSelected];
+        updatedLocations[existingLocationIndex].quantity = selectedQuantity;
+        setLocationSelected(updatedLocations);
+      } else {
+        if (
+          totalSelectedQuantityWithoutCurrent + selectedQuantity >
+          maxItemQuantity
+        ) {
+          notifications.show({
+            title: "Error",
+            message: "Total quantity exceeds the maximum available quantity.",
+            color: "red",
+          });
+          return;
+        }
+
+        setLocationSelected([
+          ...locationSelected,
+          { location_id: selectedLocation, quantity: selectedQuantity },
+        ]);
+        resetForm();
+      }
+    }
+  };
+
+  const resetForm = () => {
+    setSelectedLocation(null);
+    setSelectedQuantity("");
+    setAddLocationSubmited(false);
   };
 
   return (
@@ -343,7 +363,7 @@ function CargoDescription({ nextStep, prevStep }) {
           {dropOffLocations?.length > 1 && (
             <Grid className="w-full mt-4">
               <Grid.Col span={{ xs: 12, sm: 6 }}>
-                <Flex gap={10}>
+                <Flex gap={10} align="flex-end">
                   <Select
                     label="Dropoff Location"
                     placeholder="Dropoff Location"
@@ -351,37 +371,47 @@ function CargoDescription({ nextStep, prevStep }) {
                       value: location?.id?.toString(),
                       label: location?.dropoff_location,
                     }))}
-                    onChange={(value) => handleSelectChange(value)}
+                    value={selectedLocation}
+                    onChange={setSelectedLocation}
                     className="w-full"
+                    error={
+                      addLocationSubmited && selectedLocation === null
+                        ? "Please Select A Location"
+                        : null
+                    }
                   />
-
-                  {selectedDropOffLocation && (
-                    <NumberInput
-                      label="Quantity"
-                      placeholder="Quantity"
-                      value={
-                        locationSelected.find(
-                          (loc) => loc.id === selectedDropOffLocation
-                        )?.quantity || 0
-                      }
-                      onChange={handleQuantityChange}
-                      max={maxItemQuantity}
-                      className="w-full"
-                    />
-                  )}
+                  <NumberInput
+                    label="Quantity"
+                    placeholder="Quantity"
+                    value={selectedQuantity}
+                    onChange={setSelectedQuantity}
+                    className="w-full"
+                    error={
+                      addLocationSubmited && selectedQuantity === ""
+                        ? "Please add Quantity"
+                        : null
+                    }
+                  />
+                  <Button
+                    type="button"
+                    onClick={addLocationToItem}
+                    className="rounded-full bg-gradient-to-r from-sky-300 to-blue-500 flex-none"
+                  >
+                    Add
+                  </Button>
                 </Flex>
               </Grid.Col>
 
               <Grid.Col span={{ xs: 12, sm: 6 }}>
-                {locationSelected?.map((location) => {
+                {locationSelected?.map((loc) => {
                   const selectedLocation = dropOffLocations.find(
-                    (loc) => loc.id === location.id
+                    (location) => location.id === loc.location_id
                   );
 
                   return (
                     <div
                       key={location.id}
-                      className="bg-gray-100 p-4 rounded-md mb-4 shadow-md mt-4"
+                      className="bg-gray-100 p-4 py-2 rounded-md my-4 shadow-md "
                     >
                       <div className="flex justify-between items-center">
                         <div className="text-lg font-semibold text-gray-700">
@@ -390,7 +420,7 @@ function CargoDescription({ nextStep, prevStep }) {
                           {/* Display label */}
                         </div>
                         <div className="text-sm font-medium text-gray-500">
-                          Quantity: {location.quantity} {/* Display quantity */}
+                          Quantity: {loc.quantity} {/* Display quantity */}
                         </div>
                       </div>
                     </div>

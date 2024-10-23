@@ -28,10 +28,8 @@ function AssignShipmentItems({ nextStep, prevStep }) {
     <div>
       <div className="mt-5">
         <DataTable
-          //   striped
           withTableBorder
           borderRadius="md"
-          // height={150}
           columns={[
             {
               accessor: "no",
@@ -39,10 +37,8 @@ function AssignShipmentItems({ nextStep, prevStep }) {
               render: (records, index) => <>{index + 1}</>,
             },
             { accessor: "itemDescription", title: "Item Description" },
-            //   { accessor: "itemCategory", title: "Item Category" },
             { accessor: "packagingType", title: "Packaging Type" },
             { accessor: "quantity" },
-            //   { accessor: "weight" },
             { accessor: "totalWeight" },
           ]}
           records={shipmentItems ?? []}
@@ -77,7 +73,6 @@ function AssignShipmentItems({ nextStep, prevStep }) {
                     <DataTable
                       withTableBorder
                       borderRadius="md"
-                      // height={150}
                       columns={[
                         {
                           accessor: "dropoff_location",
@@ -88,17 +83,17 @@ function AssignShipmentItems({ nextStep, prevStep }) {
                       records={
                         record?.dropOffLocations?.map((dropOffLocation) => {
                           const locationDetails = dropOffLocations.find(
-                            (loc) => loc.id === dropOffLocation.id
+                            (loc) => loc.location_id === dropOffLocation.id
                           );
 
                           return {
                             dropoff_location: locationDetails?.dropoff_location,
                             full_name: locationDetails?.reciver?.full_name,
                             quantity: dropOffLocation.quantity,
+                            id: loc.location_id,
                           };
                         }) ?? []
                       }
-                      // departments.filter((department) => department.company.id === company.record.id)
                     />
                   </div>
                 </GridCol>

@@ -5,8 +5,12 @@ import { useDebouncedValue } from "@mantine/hooks";
 
 const LocationPicker = ({ label, value, onChange, errorMessage }) => {
   const [position, setPosition] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState(value);
   const [debouncedQuery] = useDebouncedValue(searchValue, 350);
+
+  useEffect(() => {
+    setSearchValue(value);
+  }, [value]);
 
   const [triggerGetLocation, { data: locaitons, error, isLoading }] =
     useLazyGetLocationQuery();
