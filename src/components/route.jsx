@@ -35,6 +35,7 @@ import {
   selectDropOffLocations,
   selectPickUpLocations,
   updateDropOffLocation,
+  updatePickUpLocation,
 } from "../store/shipment";
 import { DataTable } from "mantine-datatable";
 import { notifications } from "@mantine/notifications";
@@ -150,7 +151,14 @@ function Route({ nextStep, prevStep }) {
       ...data,
       pickup_date: new Date(data.pickup_date).toLocaleDateString(),
     };
-    dispatch(addPickUpLocation(payload));
+    if (payload.id) {
+      console.log("dedit", payload);
+      dispatch(updatePickUpLocation(payload));
+    } else {
+      console.log("add", payload);
+
+      dispatch(addPickUpLocation(payload));
+    }
   };
 
   const onErrorPickUp = (errors) => {
@@ -186,10 +194,11 @@ function Route({ nextStep, prevStep }) {
           phone_number: "",
         },
       });
-      return;
+    } else {
+      dispatch(addDropOffLocation(payload));
+      reset2();
     }
-    dispatch(addDropOffLocation(payload));
-    reset2();
+    setOnEdit(false);
   };
 
   const onErrorDropOff = (errors) => {

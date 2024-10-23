@@ -54,7 +54,7 @@ function CargoDescription({ nextStep, prevStep }) {
     watch,
     setValue,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -91,7 +91,7 @@ function CargoDescription({ nextStep, prevStep }) {
       if (totalQuantity !== maxItemQuantity) {
         notifications.show({
           title: "Error",
-          message: `Please put a quantity of ${maxItemQuantity} items`,
+          message: `Please assign all ${maxItemQuantity} quantity to dropoff location`,
           color: "red",
         });
         return;
@@ -428,7 +428,7 @@ function CargoDescription({ nextStep, prevStep }) {
 
                   return (
                     <div
-                      key={location.id}
+                      key={loc.id}
                       className="bg-gray-100 p-4 py-2 rounded-md my-4 shadow-md "
                     >
                       <div className="flex justify-between items-center">

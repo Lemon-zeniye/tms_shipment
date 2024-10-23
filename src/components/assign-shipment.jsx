@@ -24,6 +24,8 @@ function AssignShipmentItems({ nextStep, prevStep }) {
   const dropOffLocations = useSelector(selectDropOffLocations);
   const pickupLocations = useSelector(selectPickUpLocations);
 
+  console.log("5555555555555555", dropOffLocations, pickupLocations);
+
   return (
     <div>
       <div className="mt-5">
@@ -83,14 +85,14 @@ function AssignShipmentItems({ nextStep, prevStep }) {
                       records={
                         record?.dropOffLocations?.map((dropOffLocation) => {
                           const locationDetails = dropOffLocations.find(
-                            (loc) => loc.location_id === dropOffLocation.id
+                            (loc) => loc.id === dropOffLocation.location_id
                           );
 
                           return {
                             dropoff_location: locationDetails?.dropoff_location,
                             full_name: locationDetails?.reciver?.full_name,
                             quantity: dropOffLocation.quantity,
-                            id: loc.location_id,
+                            id: locationDetails?.id,
                           };
                         }) ?? []
                       }
