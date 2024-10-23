@@ -13,13 +13,13 @@ const shipmentSlice = createSlice({
   reducers: {
     // CREATE
     addShipmentItem: (state, action) => {
-      state.shipmentItems.push({ id: uuidv4(), ...action.payload });
+      state.shipmentItems.push({ ...action.payload, id: uuidv4() });
     },
     addPickUpLocation: (state, action) => {
-      state.pickUpLocations.push({ id: uuidv4(), ...action.payload });
+      state.pickUpLocations.push({ ...action.payload, id: uuidv4() });
     },
     addDropOffLocation: (state, action) => {
-      state.dropOffLocations.push({ id: uuidv4(), ...action.payload });
+      state.dropOffLocations.push({ ...action.payload, id: uuidv4() });
     },
 
     // READ

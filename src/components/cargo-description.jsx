@@ -20,8 +20,10 @@ import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import {
   addShipmentItem,
+  deleteShipmentItem,
   selectDropOffLocations,
   selectShipmentItems,
+  updateShipmentItem,
 } from "../store/shipment";
 import { notifications } from "@mantine/notifications";
 
@@ -31,7 +33,7 @@ function CargoDescription({ nextStep, prevStep }) {
   const dropOffLocations = useSelector(selectDropOffLocations);
 
   const schema = z.object({
-    id: z.string().default(uuidv4()),
+    id: z.string().optional(),
     itemCategory: z.string("Item category is required"),
     packagingType: z.string("Packaging type is required"),
     itemDescription: z.string("Item description is required"),
@@ -67,6 +69,7 @@ function CargoDescription({ nextStep, prevStep }) {
   }, [quantity, weight, setValue, totalWeight]);
 
   const [locationSelected, setLocationSelected] = useState([]);
+  const [onEdit, setOnEdit] = useState(false);
 
   const maxItemQuantity = watch("quantity") ?? 0;
 
@@ -96,8 +99,13 @@ function CargoDescription({ nextStep, prevStep }) {
     }
     setLocationSelected([]);
     const newData = { ...data, dropOffLocations: locationSelected };
-    dispatch(addShipmentItem(newData));
+    if (!newData.id) {
+      dispatch(addShipmentItem(newData));
+    } else {
+      dispatch(updateShipmentItem(newData));
+    }
     resetFrom();
+    setOnEdit(false);
   };
 
   const nextStepCalled = () => {
@@ -127,6 +135,7 @@ function CargoDescription({ nextStep, prevStep }) {
     setValue("dimension.width", 0);
     setValue("weight", 0);
     setValue("totalWeigth", 0);
+    setValue("id", "");
   };
 
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -198,6 +207,15 @@ function CargoDescription({ nextStep, prevStep }) {
     setSelectedLocation(null);
     setSelectedQuantity("");
     setAddLocationSubmited(false);
+  };
+  const onDeleteItem = (data) => {
+    dispatch(deleteShipmentItem(data));
+  };
+  const onEditItem = (data) => {
+    setOnEdit(true);
+    const clonedLocations = data.dropOffLocations.map((loc) => ({ ...loc }));
+    setLocationSelected(clonedLocations);
+    reset(data);
   };
 
   return (
@@ -439,7 +457,7 @@ function CargoDescription({ nextStep, prevStep }) {
               type="button"
               onClick={addToList}
             >
-              Add More Item
+              {onEdit ? "Edit Item" : "Add More Item"}
             </Button>
           </div>
         </form>
@@ -479,10 +497,20 @@ function CargoDescription({ nextStep, prevStep }) {
                   width: "0%",
                   render: (records) => (
                     <Group gap={4} justify="right" wrap="nowrap">
-                      <ActionIcon size="sm" variant="subtle" color="blue">
+                      <ActionIcon
+                        onClick={() => onEditItem(records)}
+                        size="sm"
+                        variant="subtle"
+                        color="blue"
+                      >
                         <IconEdit size={16} />
                       </ActionIcon>
-                      <ActionIcon size="sm" variant="subtle" color="red">
+                      <ActionIcon
+                        onClick={() => onDeleteItem(records)}
+                        size="sm"
+                        variant="subtle"
+                        color="red"
+                      >
                         <IconTrash size={16} />
                       </ActionIcon>
                     </Group>
