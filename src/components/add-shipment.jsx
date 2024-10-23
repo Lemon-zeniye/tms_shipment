@@ -19,7 +19,7 @@ function AddShipment() {
         <Stepper.Step
           label="Set Route"
           description="Define pickup and drop-off locations"
-          allowStepSelect={false}
+          // allowStepSelect={false}
         >
           <Divider my="lg" color="#fff" size="md" />
 
@@ -29,7 +29,7 @@ function AddShipment() {
         <Stepper.Step
           label="Describe Cargo"
           description="Provide shipment detail"
-          allowStepSelect={false}
+          // allowStepSelect={false}
         >
           <Divider my="lg" color="#fff" size="md" />
           <CargoDescription nextStep={nextStep} prevStep={prevStep} />
@@ -38,7 +38,7 @@ function AddShipment() {
         <Stepper.Step
           label="Final Step"
           description="Review shipment details and submit"
-          allowStepSelect={false}
+          // allowStepSelect={false}
         >
           <Divider my="lg" color="#fff" size="md" />
 

@@ -175,7 +175,7 @@ function Route({ nextStep, prevStep }) {
       <Grid>
         <Grid.Col span={{ xs: 12, sm: 6 }}>
           <form>
-            <Title>From</Title>
+            <Title className="font-custom">From</Title>
             <Box className="shadow-lg rounded-md p-5 pb-12 border-t bg-white  border-t-gray-100">
               <Controller
                 name="pickup_location"
@@ -323,7 +323,7 @@ function Route({ nextStep, prevStep }) {
 
         <Grid.Col span={{ xs: 12, sm: 6 }}>
           <form>
-            <Title>To</Title>
+            <Title className="font-custom">To</Title>
             <Box className="shadow-lg rounded-md p-5 bg-white">
               <Checkbox
                 onChange={(e) => setMultipleDropOfloc(e.currentTarget.checked)}

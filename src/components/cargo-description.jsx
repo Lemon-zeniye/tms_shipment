@@ -261,7 +261,7 @@ function CargoDescription({ nextStep, prevStep }) {
               )}
             />
             <Box>
-              <Text className="font-semibold">Dimension</Text>
+              <Text className="text-sm">Dimension</Text>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Controller
                   name="dimension.length"

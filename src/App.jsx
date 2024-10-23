@@ -16,6 +16,7 @@ import Transporter from "./pages/Transporter";
 import Vehicles from "./pages/vehicles";
 import { HeroSection } from "./components/hero-section";
 import AddShipment from "./components/add-shipment";
+import "./App.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

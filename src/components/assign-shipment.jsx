@@ -24,13 +24,6 @@ function AssignShipmentItems({ nextStep, prevStep }) {
   const dropOffLocations = useSelector(selectDropOffLocations);
   const pickupLocations = useSelector(selectPickUpLocations);
 
-  console.log(
-    "33333333333333333",
-    shipmentItems,
-    dropOffLocations,
-    pickupLocations
-  );
-
   return (
     <div>
       <div className="mt-5">

@@ -24,6 +24,9 @@ const config = {
           950: "#172554",
         },
       },
+      fontFamily: {
+        custom: ["CustomFont"],
+      },
     },
   },
   plugins: [],
