@@ -17,6 +17,7 @@ import Vehicles from "./pages/vehicles";
 import { HeroSection } from "./components/hero-section";
 import AddShipment from "./components/add-shipment";
 import "./App.css";
+import RegisterPage from "./pages/RegisterPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<AuthLayout />}>
         <Route index element={<HeroSection />} />
         <Route path="/shipment" element={<AddShipment />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<RegisterPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

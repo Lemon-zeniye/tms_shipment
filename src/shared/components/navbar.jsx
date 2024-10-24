@@ -165,8 +165,12 @@ export function HeaderMenu() {
           </Group>
 
           <Group visibleFrom="sm">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            <Link to="login">
+              <Button variant="default">Log in</Button>
+            </Link>
+            <Link to="signup">
+              <Button>Sign up</Button>
+            </Link>
           </Group>
 
           <Burger
