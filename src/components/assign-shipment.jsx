@@ -24,7 +24,7 @@ function AssignShipmentItems({ nextStep, prevStep }) {
   const dropOffLocations = useSelector(selectDropOffLocations);
   const pickupLocations = useSelector(selectPickUpLocations);
 
-  console.log("5555555555555555", dropOffLocations, pickupLocations);
+  console.log(dropOffLocations, pickupLocations, shipmentItems);
 
   return (
     <div>

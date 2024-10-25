@@ -6,35 +6,32 @@ import {
   IconTruck,
   IconCreditCard,
   IconSettings,
+  IconUser,
+  IconMapPin,
 } from "@tabler/icons-react";
 import classes from "./nested-nab-bar.module.css";
 import { LinksGroup } from "./navbar-link-group";
 
 const mockdata = [
   { label: "Dashboard", icon: IconGauge, link: "/dashboard" },
-  {
-    label: "Transporters",
-    icon: IconTruck,
-    initiallyOpened: true,
-    links: [
-      { label: "Transporters", link: "/transporters" },
-      { label: "Drivers", link: "/drivers" },
-      { label: "Vehicles", link: "/vehicles" },
-    ],
-  },
-  { label: "Shipments", icon: IconNotes },
-  { label: "Payments", icon: IconCreditCard },
-  { label: "Report", icon: IconFileAnalytics },
-  { label: "Settings", icon: IconSettings },
-  //   {
-  //     label: "Security",
-  //     icon: IconLock,
-  //     links: [
-  //       { label: "Enable 2FA", link: "/" },
-  //       { label: "Change password", link: "/" },
-  //       { label: "Recovery codes", link: "/" },
-  //     ],
-  //   },
+  { label: "Shipments", icon: IconNotes, link: "/shipments" },
+  // {
+  //   label: "Transporters",
+  //   icon: IconTruck,
+  //   initiallyOpened: true,
+  //   links: [
+  //     { label: "Drivers", link: "/drivers" },
+  //     { label: "Vehicles", link: "/vehicles" },
+  //   ],
+  // },
+  { label: "Track Shipment", icon: IconMapPin, link: "/track" },
+  { label: "Drivers", icon: IconUser, link: "/drivers" },
+
+  { label: "Vehicles", icon: IconTruck, link: "/vehicles" },
+
+  { label: "Payments", icon: IconCreditCard, link: "/dashboard" },
+  { label: "Report", icon: IconFileAnalytics, link: "/dashboard" },
+  { label: "Settings", icon: IconSettings, link: "/dashboard" },
 ];
 
 export function NavbarNested() {
