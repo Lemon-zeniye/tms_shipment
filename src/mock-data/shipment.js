@@ -338,57 +338,6 @@ export const shipment = {
   },
 };
 
-// export const vehicles = [
-//   {
-//     id: 1,
-//     vehicle_type: "Truck",
-//     vehicle_model: "Ford F-150",
-//     license_plate_number: "ABC1234",
-//     VIN: "1FTFW1E59JKE98765",
-//     weight_capacity: "3000 kg",
-//     volume_capacity: "15 m³",
-//     insurance_policy_number: "INS12345678",
-//     insurance_type: "Comprehensive",
-//     insurance_expiry_date: "2025-05-31",
-//   },
-//   {
-//     id: 2,
-//     vehicle_type: "Van",
-//     vehicle_model: "Mercedes-Benz Sprinter",
-//     license_plate_number: "XYZ5678",
-//     VIN: "WD3PE7CDXFP987654",
-//     weight_capacity: "2000 kg",
-//     volume_capacity: "12 m³",
-//     insurance_policy_number: "INS87654321",
-//     insurance_type: "Third-Party",
-//     insurance_expiry_date: "2024-12-15",
-//   },
-//   {
-//     id: 3,
-//     vehicle_type: "SUV",
-//     vehicle_model: "Toyota Land Cruiser",
-//     license_plate_number: "LMN4567",
-//     VIN: "JTMCU09J1G4123456",
-//     weight_capacity: "1500 kg",
-//     volume_capacity: "10 m³",
-//     insurance_policy_number: "INS11223344",
-//     insurance_type: "Comprehensive",
-//     insurance_expiry_date: "2026-03-10",
-//   },
-//   {
-//     id: 4,
-//     vehicle_type: "Truck",
-//     vehicle_model: "Chevrolet Silverado",
-//     license_plate_number: "DEF7890",
-//     VIN: "3GCUKSEC6JG123456",
-//     weight_capacity: "3500 kg",
-//     volume_capacity: "18 m³",
-//     insurance_policy_number: "INS99887766",
-//     insurance_type: "Third-Party",
-//     insurance_expiry_date: "2025-09-20",
-//   },
-// ];
-
 export const vehicles = [
   {
     id: "1",
@@ -454,7 +403,12 @@ export const drivers = [
     phone_number: "+1234567890",
     email: "johndoe@example.com",
     experience_years: 5,
-    address: "123 Main St, City, State, ZIP",
+    address: {
+      street: "123 Main St",
+      city: "Main City",
+      state: "State 123",
+      zip: "10001",
+    },
     status: "active",
   },
   {
@@ -466,7 +420,12 @@ export const drivers = [
     phone_number: "+0987654321",
     email: "janesmith@example.com",
     experience_years: 8,
-    address: "456 Elm St, City, State, ZIP",
+    address: {
+      street: "456 Elm St",
+      city: "City",
+      state: "State",
+      zip: "ZIP",
+    },
     status: "inactive",
   },
   {
@@ -478,7 +437,12 @@ export const drivers = [
     phone_number: "+1122334455",
     email: "davidbrown@example.com",
     experience_years: 12,
-    address: "789 Oak St, City, State, ZIP",
+    address: {
+      street: "789 Oak St",
+      city: "City",
+      state: "State",
+      zip: "ZIP",
+    },
     status: "active",
   },
   {
@@ -490,7 +454,12 @@ export const drivers = [
     phone_number: "+1223344556",
     email: "emilywhite@example.com",
     experience_years: 3,
-    address: "321 Pine St, City, State, ZIP",
+    address: {
+      street: "321 Pine St",
+      city: "City",
+      state: "State",
+      zip: "ZIP",
+    },
     status: "active",
   },
   {
@@ -502,7 +471,12 @@ export const drivers = [
     phone_number: "+1324354657",
     email: "michaelgreen@example.com",
     experience_years: 9,
-    address: "654 Cedar St, City, State, ZIP",
+    address: {
+      street: "654 Cedar St",
+      city: "City",
+      state: "State",
+      zip: "ZIP",
+    },
     status: "inactive",
   },
   {
@@ -514,7 +488,12 @@ export const drivers = [
     phone_number: "+1425364758",
     email: "sarahblue@example.com",
     experience_years: 7,
-    address: "987 Maple St, City, State, ZIP",
+    address: {
+      street: "987 Maple St",
+      city: "City",
+      state: "State",
+      zip: "ZIP",
+    },
     status: "active",
   },
 ];

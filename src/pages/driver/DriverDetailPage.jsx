@@ -13,7 +13,12 @@ function DriverDetailPage() {
     "Phone Number": driver.phone_number,
     Email: driver.email,
     "Experience Years": driver.experience_years,
-    Address: driver.address,
+    Address: {
+      Street: driver.address.street,
+      City: driver.address.city,
+      State: driver.address.state,
+      Zip: driver.address.zip,
+    },
     Status: driver.status,
   };
   return (
