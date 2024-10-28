@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { DataTable } from "mantine-datatable";
-import { Box, Button, Flex } from "@mantine/core";
+import { Box, Button, Flex, TextInput } from "@mantine/core";
 import { drivers } from "../../mock-data/shipment";
 import { useNavigate } from "react-router-dom";
-import { IconChevronRight } from "@tabler/icons-react";
+import { IconChevronRight, IconSearch } from "@tabler/icons-react";
 
 function DriversPage() {
   const [page, setPage] = useState(1);
@@ -16,8 +16,14 @@ function DriversPage() {
   };
   return (
     <div>
-      <Flex className="mb-4">
+      <Flex className="mb-4" justify="space-between">
         <Button onClick={() => navigate("/driver/new")}>New Drivers</Button>
+        <TextInput
+          size="md"
+          radius="xl"
+          placeholder="Search"
+          rightSection={<IconSearch />}
+        />
       </Flex>
       <DataTable
         shadow="lg"

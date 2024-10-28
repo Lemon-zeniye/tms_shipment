@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 import classes from "./nested-nab-bar.module.css";
 import { LinksGroup } from "./navbar-link-group";
+import { useNavigate } from "react-router-dom";
 
 const mockdata = [
   { label: "Dashboard", icon: IconGauge, link: "/dashboard" },
@@ -35,6 +36,7 @@ const mockdata = [
 ];
 
 export function NavbarNested() {
+  const navigate = useNavigate();
   const links = mockdata.map((item) => (
     <LinksGroup {...item} key={item.label} />
   ));
@@ -45,7 +47,14 @@ export function NavbarNested() {
         <div>{links}</div>
       </ScrollArea>
 
-      <div className={classes.footer}>User button</div>
+      <div className={classes.footer}>
+        <div
+          className="text-center mt-4 cursor-pointer"
+          onClick={() => navigate("/profile")}
+        >
+          ABC Logistics, Inc.
+        </div>
+      </div>
     </nav>
   );
 }

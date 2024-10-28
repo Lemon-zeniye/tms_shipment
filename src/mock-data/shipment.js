@@ -524,3 +524,28 @@ export const companies = [
     status: "Inactive",
   },
 ];
+
+export const companyData = {
+  companyName: "ABC Logistics, Inc.",
+  businessRegistrationNumber: "123456789",
+  taxIdentificationNumber: "987-65-4320",
+  date: "11/11/2024",
+  operationalDetails: {
+    operatingAreas: "Addis Ababa",
+    fleetSize: "5 vans, 5 trailers",
+    operatingHours: "24 Hours",
+    transportServicesOffered: ["Bulk cargo", "Hazardous materials"],
+  },
+  contactDetails: {
+    fullName: "Jone Smith",
+    email: "john.smith@example.com",
+    phoneNumber: "0912345455",
+    officePhoneNumber: "0116476774",
+  },
+  address: {
+    stateRegion: "Addis Ababa",
+    city: "Bole",
+    addressLineOne: "address line one",
+    addressLineTwo: "address line two",
+  },
+};

@@ -25,6 +25,7 @@ import DriverDetailPage from "./pages/driver/DriverDetailPage";
 import NewDriver from "./pages/driver/NewDriver";
 import NewVehicle from "./pages/vehicle/NewVehicle";
 import AssignShipment from "./pages/shipment/AssignShipment";
+import Profile from "./pages/profile";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
         <Route path="/vehicle/:id" element={<VehiclesDetailPage />} />
         <Route path="/track" element={<TrackShipment />} />
         <Route path="/track/:id" element={<TrackShipmentDetail />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
 
       <Route path="/" element={<AuthLayout />}>

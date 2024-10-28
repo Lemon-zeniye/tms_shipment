@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { shipment, vehicles } from "../../mock-data/shipment";
 import { Box, Button, Divider, Grid, Select, Text } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
-import { IconBuilding, IconChevronRight } from "@tabler/icons-react";
+import {
+  IconBuilding,
+  IconChevronLeft,
+  IconChevronRight,
+} from "@tabler/icons-react";
 import classes from "../../shared/components/row-expantion-icon.module.css";
 import clsx from "clsx";
 import DynamicGrid from "../../components/detail-grid";
@@ -41,17 +45,19 @@ function ShipmentsDetailPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-between">
+        <IconChevronLeft
+          stroke={2}
+          onClick={() => navigate("/shipments")}
+          className="cursor-pointer size-[1.5rem]"
+        />
         <div className="flex gap-4">
           {!accept ? (
             <Button color="green" onClick={() => setAccept(true)}>
               Accept
             </Button>
           ) : (
-            <Button
-              color="green"
-              onClick={() => navigate(`/shipment/assign/${id}`)}
-            >
+            <Button onClick={() => navigate(`/shipment/assign/${id}`)}>
               Assign
             </Button>
           )}
