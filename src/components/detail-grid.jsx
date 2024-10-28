@@ -4,7 +4,7 @@ function DynamicGrid({ data }) {
   const renderGrid = (obj, nested = false) => {
     return (
       <div
-        className={`grid grid-cols-1 md:grid-cols-5 gap-4 p-4 ${
+        className={`grid grid-cols-1 md:grid-cols-6 gap-4 p-4 ${
           nested ? "bg-gray-100 p-2 rounded" : ""
         }`}
       >
@@ -16,7 +16,7 @@ function DynamicGrid({ data }) {
           ) {
             return (
               <React.Fragment key={key}>
-                <div className="col-span-1 font-bold">{key}:</div>
+                <div className="col-span-2 font-bold">{key}:</div>
                 <div className="col-span-4">{renderGrid(value, true)}</div>
               </React.Fragment>
             );
@@ -24,7 +24,7 @@ function DynamicGrid({ data }) {
 
           return (
             <React.Fragment key={key}>
-              <div className="col-span-1 font-bold">{key}:</div>
+              <div className="col-span-2 font-bold">{key}:</div>
               <div className="col-span-4">{value.toString()}</div>
             </React.Fragment>
           );

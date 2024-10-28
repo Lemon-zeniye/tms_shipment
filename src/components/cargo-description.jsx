@@ -3,6 +3,7 @@ import {
   ActionIcon,
   Box,
   Button,
+  Divider,
   Flex,
   Grid,
   Group,
@@ -44,7 +45,8 @@ function CargoDescription({ nextStep, prevStep }) {
       height: z.number().min(1, "Height must be greater than 0"),
     }),
     weight: z.number().min(1, "Weight must be greater than 0"),
-    totalWeight: z.number().min(1, "Total weight must be greater than 0"),
+    totalWeight: z.string().min(1, "Total weight must be greater than 0"),
+    totalDimension: z.string().min(1, "Total weight must be greater than 0"),
   });
 
   const {
@@ -61,12 +63,26 @@ function CargoDescription({ nextStep, prevStep }) {
 
   const quantity = watch("quantity");
   const weight = watch("weight");
+  const length = watch("dimension.length");
+  const width = watch("dimension.width");
+  const height = watch("dimension.height");
 
   const totalWeight = quantity * weight;
+  const totalDimension = length * width * height * quantity;
 
   React.useEffect(() => {
-    setValue("totalWeight", totalWeight);
-  }, [quantity, weight, setValue, totalWeight]);
+    setValue("totalWeight", totalWeight?.toString());
+    setValue("totalDimension", totalDimension?.toString());
+  }, [
+    quantity,
+    weight,
+    setValue,
+    totalWeight,
+    length,
+    width,
+    height,
+    totalDimension,
+  ]);
 
   const [locationSelected, setLocationSelected] = useState([]);
   const [onEdit, setOnEdit] = useState(false);
@@ -99,6 +115,12 @@ function CargoDescription({ nextStep, prevStep }) {
     }
     setLocationSelected([]);
     const newData = { ...data, dropOffLocations: locationSelected };
+    if (dropOffLocations?.length === 1) {
+      newData.dropOffLocations.push({
+        location_id: dropOffLocations[0]?.id,
+        quantity: newData.quantity,
+      });
+    }
     if (!newData.id) {
       dispatch(addShipmentItem(newData));
     } else {
@@ -141,6 +163,7 @@ function CargoDescription({ nextStep, prevStep }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState("");
   const [addLocationSubmited, setAddLocationSubmited] = useState(false);
+  const selectedPackagingType = watch("packagingType");
 
   const addLocationToItem = () => {
     setAddLocationSubmited(true);
@@ -272,7 +295,6 @@ function CargoDescription({ nextStep, prevStep }) {
                     "Bundles",
                     "Crates",
                     "Totes",
-                    "Other",
                     "None",
                   ]}
                   className="flex-1"
@@ -290,6 +312,11 @@ function CargoDescription({ nextStep, prevStep }) {
                 <NumberInput
                   name={name}
                   label="Quantity"
+                  description={`${
+                    selectedPackagingType && selectedPackagingType !== "None"
+                      ? `Quantity of ${selectedPackagingType}`
+                      : ""
+                  }`}
                   placeholder="Quantity"
                   value={value}
                   className="w-full"
@@ -299,7 +326,16 @@ function CargoDescription({ nextStep, prevStep }) {
               )}
             />
             <Box>
-              <Text className="text-sm">Dimension</Text>
+              <Text className="text-sm">
+                Dimension (m3)
+                {selectedPackagingType && selectedPackagingType !== "None" ? (
+                  <Text className="text-xs text-gray-400 py-1">
+                    Dimension of {selectedPackagingType}
+                  </Text>
+                ) : (
+                  ""
+                )}
+              </Text>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Controller
                   name="dimension.length"
@@ -352,7 +388,12 @@ function CargoDescription({ nextStep, prevStep }) {
               render={({ field: { name, value, onChange } }) => (
                 <NumberInput
                   name={name}
-                  label="Weight"
+                  label="Weight (kg)"
+                  description={`${
+                    selectedPackagingType && selectedPackagingType !== "None"
+                      ? `Weight of ${selectedPackagingType}`
+                      : ""
+                  }`}
                   placeholder="Weight"
                   value={value}
                   className="w-full"
@@ -361,21 +402,31 @@ function CargoDescription({ nextStep, prevStep }) {
                 />
               )}
             />
-            <Controller
-              name="totalWeight"
-              control={control}
-              render={({ field: { name, value, onChange } }) => (
-                <NumberInput
-                  name={name}
-                  label="Total Weight"
-                  placeholder="Total Weight"
-                  value={value}
-                  className="w-full"
-                  onChange={onChange}
-                  error={errors?.totalWeight?.message}
-                  disabled
-                />
-              )}
+            <TextInput
+              label="Total Dimension (m3)"
+              placeholder="Total Dimension"
+              disabled
+              description={`${
+                selectedPackagingType && selectedPackagingType !== "None"
+                  ? `Total Dimension of ${selectedPackagingType}`
+                  : ""
+              }`}
+              type="number"
+              {...register("totalDimension")}
+              error={errors.totalDimension?.message}
+            />
+            <TextInput
+              label="Total Weight"
+              placeholder="Total Weight"
+              disabled
+              description={`${
+                selectedPackagingType && selectedPackagingType !== "None"
+                  ? `Total Weight of ${selectedPackagingType}`
+                  : ""
+              }`}
+              type="number"
+              {...register("totalWeight")}
+              error={errors.totalWeight?.message}
             />
           </div>
           {dropOffLocations?.length > 1 && (
@@ -478,7 +529,7 @@ function CargoDescription({ nextStep, prevStep }) {
                 { accessor: "quantity" },
                 {
                   accessor: "dimension",
-                  title: "Dimension",
+                  title: "Dimension (m3)",
                   render: (records) => (
                     <Grid gap={2}>
                       <Grid.Col span={2}>{records.dimension.length}</Grid.Col>
@@ -489,8 +540,9 @@ function CargoDescription({ nextStep, prevStep }) {
                     </Grid>
                   ),
                 },
-                { accessor: "weight" },
-                { accessor: "totalWeight" },
+                { accessor: "weight", title: "Weight (kg)" },
+                { accessor: "totalDimension", title: "Total Dimension (m3)" },
+                { accessor: "totalWeight", title: "Total Weight (kg)" },
                 {
                   accessor: "actions",
                   title: "",

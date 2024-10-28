@@ -24,6 +24,7 @@ import VehiclesDetailPage from "./pages/vehicle/VehiclesDetailPage";
 import DriverDetailPage from "./pages/driver/DriverDetailPage";
 import NewDriver from "./pages/driver/NewDriver";
 import NewVehicle from "./pages/vehicle/NewVehicle";
+import AssignShipment from "./pages/shipment/AssignShipment";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
         <Route path="/admin" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/shipments" element={<ShipmentsPage />} />
+        <Route path="/shipment/assign/:id" element={<AssignShipment />} />
         <Route path="/shipment/:id" element={<ShipmentsDetailPage />} />
         <Route path="/drivers" element={<DriversPage />} />
         <Route path="/driver/new" element={<NewDriver />} />

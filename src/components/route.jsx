@@ -77,7 +77,7 @@ function Route({ nextStep, prevStep }) {
     to: z.string("Item description is required"),
     contact_person: z.object({
       full_name: z.string().nonempty("Full Name is required"),
-      phone_number: z.number().min(1, "Phone Number is required"),
+      phone_number: z.string().min(1, "Phone Number is required"),
       email: z
         .string()
         .nonempty("Email is required")
@@ -116,7 +116,7 @@ function Route({ nextStep, prevStep }) {
     delivery_date: z.date("Packaging type is required"),
     reciver: z.object({
       full_name: z.string().nonempty("Full Name is required"),
-      phone_number: z.number().min(1, "Phone Number is required"),
+      phone_number: z.string().min(1, "Phone Number is required"),
       email: z
         .string()
         .nonempty("Email is required")
@@ -185,7 +185,7 @@ function Route({ nextStep, prevStep }) {
         delivery_date: null,
         reciver: {
           full_name: "",
-          phone_number: 0,
+          phone_number: "",
           email: "",
         },
         store: {
@@ -237,7 +237,11 @@ function Route({ nextStep, prevStep }) {
           phone_number: dropoffloc.reciver.phone_number,
           email: dropoffloc.reciver.email,
         },
-        store: dropoffloc.store,
+        store: {
+          store_keeper_name: dropoffloc?.store?.store_keeper_name ?? "",
+          store_number: dropoffloc?.store?.store_number ?? "",
+          phone_number: dropoffloc?.store?.phone_number,
+        },
       });
     }
   };
@@ -265,6 +269,9 @@ function Route({ nextStep, prevStep }) {
           phone_number: firstPickup?.store?.phone_number,
         },
       });
+      if (firstPickup?.store) {
+        setPickUpStore(true);
+      }
     }
   }, [pickupLocations, reset]);
 
@@ -375,20 +382,13 @@ function Route({ nextStep, prevStep }) {
                     {...register("contact_person.full_name")}
                     error={errors?.contact_person?.full_name?.message}
                   />
-                  <Controller
-                    name="contact_person.phone_number"
-                    control={control}
-                    render={({ field: { name, value, onChange } }) => (
-                      <NumberInput
-                        name={name}
-                        label="Phone Number"
-                        placeholder="Phone Number"
-                        value={value}
-                        className="w-full"
-                        onChange={onChange}
-                        error={errors?.contact_person?.phone_number?.message}
-                      />
-                    )}
+                  <TextInput
+                    label="Phone Number"
+                    placeholder="Phone Number"
+                    className="w-full"
+                    type="number"
+                    {...register("contact_person.phone_number")}
+                    error={errors?.contact_person?.phone_number?.message}
                   />
                   <TextInput
                     label="Email"
@@ -419,21 +419,21 @@ function Route({ nextStep, prevStep }) {
                     label="Store Number"
                     placeholder="Store Number"
                     className="w-full"
-                    {...register("store?.store_number")}
+                    {...register("store.store_number")}
                     error={errors?.store?.store_number?.message}
                   />
                   <TextInput
                     label="Store Keeper Full Name"
                     placeholder="Store Keeper Full Name"
                     className="w-full"
-                    {...register("store?.store_keeper_name")}
+                    {...register("store.store_keeper_name")}
                     error={errors?.store?.store_keeper_name?.message}
                   />
                   <TextInput
                     label="Store Keeper Phone Number"
                     placeholder="Store Keeper Phone Number"
                     className="w-full"
-                    {...register("store?.phone_number")}
+                    {...register("store.phone_number")}
                     error={errors?.store?.phone_number?.message}
                   />
                 </Flex>
@@ -504,20 +504,13 @@ function Route({ nextStep, prevStep }) {
                     {...register2("reciver.full_name")}
                     error={errors2?.reciver?.full_name?.message}
                   />
-                  <Controller
-                    name="reciver.phone_number"
-                    control={control2}
-                    render={({ field: { name, value, onChange } }) => (
-                      <NumberInput
-                        name={name}
-                        label="Phone Number"
-                        placeholder="Phone Number"
-                        value={value}
-                        className="w-full"
-                        onChange={onChange}
-                        error={errors2?.reciver?.phone_number?.message}
-                      />
-                    )}
+                  <TextInput
+                    label="Phone Number"
+                    placeholder="Phone Number"
+                    className="w-full"
+                    type="number"
+                    {...register2("reciver.phone_number")}
+                    error={errors2?.reciver?.phone_number?.message}
                   />
                   <TextInput
                     label="Email"

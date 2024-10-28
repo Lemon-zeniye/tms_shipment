@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { shipment, vehicles } from "../../mock-data/shipment";
-import { Box, Button, Divider, Select, Text } from "@mantine/core";
+import { Box, Button, Divider, Grid, Select, Text } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { IconBuilding, IconChevronRight } from "@tabler/icons-react";
 import classes from "../../shared/components/row-expantion-icon.module.css";
 import clsx from "clsx";
 import DynamicGrid from "../../components/detail-grid";
+import { useNavigate, useParams } from "react-router-dom";
 
 const detailData = {
   "Shipment No.": shipment.shipmentNumber,
@@ -22,40 +23,54 @@ const detailData = {
   "Total Dimension (m3)": "10 m3",
 };
 
+const detailData2 = {
+  "Dropoff Location": "Yeka, Agago, Northern Region, Uganda",
+  "Delivery Date": "10/23/2024",
+  Reciver: {
+    "Full Name": "Nati Tolosa Gadi",
+    "Phone Number": 987654321,
+    Email: "nati@gmail.com",
+  },
+};
+
 function ShipmentsDetailPage() {
   const [expandedIds, setExpandedIds] = useState([]);
   const [accept, setAccept] = useState(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   return (
     <div>
       <div className="flex items-center justify-end">
         <div className="flex gap-4">
-          {!accept && (
+          {!accept ? (
             <Button color="green" onClick={() => setAccept(true)}>
               Accept
+            </Button>
+          ) : (
+            <Button
+              color="green"
+              onClick={() => navigate(`/shipment/assign/${id}`)}
+            >
+              Assign
             </Button>
           )}
         </div>
       </div>
       <div>
-        {accept && (
-          <div className="p-4">
-            <Text className="text-lg font-semibold">Assign Vehicle</Text>
-            <div className="flex items-end gap-4">
-              <Select
-                placeholder="Search For Vehicle"
-                data={vehicles?.map((vehicle) => ({
-                  value: vehicle?.id?.toString(),
-                  label: `${vehicle?.license_plate_number} - ${vehicle?.vehicle_type} - ${vehicle?.volume_capacity} - ${vehicle?.weight_capacity}`,
-                }))}
-                className="w-full"
-              />
-              <Button className="flex-none">Assign</Button>
-            </div>
-            <Divider mt="md" size="md" />
-          </div>
+        {id == 1 ? (
+          <Grid>
+            <Grid.Col span={{ sm: 12, md: 6 }}>
+              <DynamicGrid data={detailData} />
+            </Grid.Col>
+            <Grid.Col span={{ sm: 12, md: 6 }}>
+              <DynamicGrid data={detailData2} />
+            </Grid.Col>
+          </Grid>
+        ) : (
+          <DynamicGrid data={detailData} />
         )}
-        <DynamicGrid data={detailData} />
+
         <div className="p-4">
           <DataTable
             shadow="lg"

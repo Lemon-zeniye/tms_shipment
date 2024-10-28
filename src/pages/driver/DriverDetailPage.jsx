@@ -9,7 +9,6 @@ function DriverDetailPage() {
     "Driver Name": driver.name,
     "License Number": driver.license_number,
     "License Expiry Date": driver.license_expiry_date,
-    "License Expiry Date": driver.license_expiry_date,
     "Phone Number": driver.phone_number,
     Email: driver.email,
     "Experience Years": driver.experience_years,
